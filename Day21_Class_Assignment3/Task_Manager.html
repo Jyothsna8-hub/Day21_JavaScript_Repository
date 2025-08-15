@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    
+    .completed {
+        color: inherit; /* Keep normal text color */
+        text-decoration: none; /* No strike-through */
+    }
+
+    body {
+      background: linear-gradient(135deg, #d4e0ec, #b7cfe6);
+    }
+    .btn-lightblue {
+      background-color: #5bc0de;
+      color: white;
+    }
+    .btn-lightblue:hover {
+      background-color: #31b0d5;
+      color: white;
+    }
+    /* Task Manager Heading Color */
+    .task-manager-heading {
+        color: black;
+    }
+    #taskList li {
+        margin-bottom: 10px; /* Add spacing between tasks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  
+  <h2 class="text-center mb-4 fw-bold task-manager-heading">🎯 Task Manager</h2>
+
+  <!-- Input Section -->
+  <div class="input-group mb-4 shadow-sm">
+    <input type="text" id="taskInput" class="form-control" placeholder="Enter a new task">
+    <button class="btn btn-lightblue" id="addTaskBtn">Add Task</button>
+  </div>
+
+  <!-- Task List -->
+  <ul id="taskList" class="list-group shadow-sm"></ul>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  let tasks = [];
+
+  // Add Task
+  document.getElementById("addTaskBtn").addEventListener("click", () => {
+    const taskText = document.getElementById("taskInput").value.trim();
+    if (taskText) {
+      tasks.push({ text: taskText, completed: false });
+      document.getElementById("taskInput").value = "";
+      displayTasks();
+    }
+  });
+
+  // Display Tasks
+  function displayTasks() {
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+      const li = document.createElement("li");
+      li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+      // Task text
+      const span = document.createElement("span");
+      span.textContent = task.text;
+      if (task.completed) span.classList.add("completed");
+      li.appendChild(span);
+
+      // Button group
+      const btnGroup = document.createElement("div");
+      btnGroup.className = "d-flex align-items-center";
+
+      // ✅ Dropdown for Complete/Incomplete
+      const statusSelect = document.createElement("select");
+      statusSelect.className = "form-select form-select-sm me-2";
+      statusSelect.style.width = "140px";
+
+      const optionIncomplete = document.createElement("option");
+      optionIncomplete.value = "incomplete";
+      optionIncomplete.textContent = "❌ Incomplete";
+      if (!task.completed) optionIncomplete.selected = true;
+      statusSelect.appendChild(optionIncomplete);
+
+      const optionComplete = document.createElement("option");
+      optionComplete.value = "complete";
+      optionComplete.textContent = "✅ Complete";
+      if (task.completed) optionComplete.selected = true;
+      statusSelect.appendChild(optionComplete);
+
+      statusSelect.addEventListener("change", () => {
+        tasks[index].completed = (statusSelect.value === "complete");
+        displayTasks();
+      });
+
+      btnGroup.appendChild(statusSelect);
+
+      // 🗑 Delete button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "btn btn-sm btn-danger";
+      deleteBtn.addEventListener("click", () => {
+        tasks = tasks.filter((_, i) => i !== index);
+        displayTasks();
+      });
+
+      btnGroup.appendChild(deleteBtn);
+
+      li.appendChild(btnGroup);
+      taskList.appendChild(li);
+    });
+  }
+</script>
+
+</body>
+</html>
