@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Application</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 30px;
+        }
+        .bank-card {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            background: white;
+        }
+        .btn-group-custom button {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+        #output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bank-card">
+    <h2 class="text-center text-primary mb-4">🏦 Bank Application</h2>
+
+    <div class="mb-3">
+        <label class="form-label">Account ID</label>
+        <input type="text" class="form-control" id="accId" placeholder="Enter Account ID">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Account Holder Name</label>
+        <input type="text" class="form-control" id="accName" placeholder="Enter Account Holder Name">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Initial Amount</label>
+        <input type="number" class="form-control" id="initialAmount" placeholder="Enter initial amount">
+    </div>
+
+    <button class="btn btn-success w-100 mb-3" onclick="createAccount()">Create Account</button>
+
+    <div class="btn-group-custom d-flex flex-wrap justify-content-between">
+        <button class="btn btn-primary" onclick="deposit()">Deposit</button>
+        <button class="btn btn-warning" onclick="withdraw()">Withdraw</button>
+        <button class="btn btn-info text-white" onclick="checkBalance()">Check Balance</button>
+        <button class="btn btn-dark" onclick="accountDetails()">Account Details</button>
+    </div>
+
+    <div id="output" class="alert alert-secondary mt-3"></div>
+</div>
+
+<script>
+    let account = {
+        id: "",
+        name: "",
+        balance: 0
+    };
+
+    function createAccount() {
+        account.id = document.getElementById("accId").value;
+        account.name = document.getElementById("accName").value;
+        account.balance = parseFloat(document.getElementById("initialAmount").value);
+        document.getElementById("output").innerHTML = "✅ Account created successfully!";
+    }
+
+    function deposit() {
+        let amount = parseFloat(prompt("Enter deposit amount:"));
+        if (amount > 0) {
+            account.balance += amount;
+            document.getElementById("output").innerHTML = `💰 Deposited ₹${amount}. New Balance: ₹${account.balance}`;
+        } else {
+            document.getElementById("output").innerHTML = "⚠ Invalid deposit amount.";
+        }
+    }
+
+    function withdraw() {
+        let amount = parseFloat(prompt("Enter withdrawal amount:"));
+        if (amount > 0 && amount <= account.balance) {
+            account.balance -= amount;
+            document.getElementById("output").innerHTML = `Withdrawn ₹${amount}. New Balance: ₹${account.balance}`;
+        } else if (amount > account.balance) {
+            document.getElementById("output").innerHTML = "❌ Insufficient funds!";
+        } else {
+            document.getElementById("output").innerHTML = "⚠ Invalid withdrawal amount.";
+        }
+    }
+
+    function checkBalance() {
+        document.getElementById("output").innerHTML = `📊 Current Balance: ₹${account.balance}`;
+    }
+
+    function accountDetails() {
+        document.getElementById("output").innerHTML = 
+            `<strong>Account ID:</strong> ${account.id}<br>
+             <strong>Account Name:</strong> ${account.name}<br>
+             <strong>Balance:</strong> ₹${account.balance}`;
+    }
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
